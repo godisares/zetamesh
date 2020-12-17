@@ -22,7 +22,6 @@ import (
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/libp2p/go-reuseport"
-	"github.com/lonng/zetamesh/api"
 	"github.com/lonng/zetamesh/codec"
 	"github.com/lonng/zetamesh/constant"
 	"github.com/lonng/zetamesh/message"
@@ -44,7 +43,7 @@ type Options struct {
 // Node represents a local peer node of ZetaMesh
 type Node struct {
 	opt       Options
-	apiClient *api.Client
+	apiClient *client
 	dialer    *net.Dialer
 	gateway   *net.UDPConn
 	pipeline  chan []byte
@@ -58,7 +57,7 @@ type Node struct {
 func New(opt Options) *Node {
 	return &Node{
 		opt:       opt,
-		apiClient: api.NewClient(opt.Gateway, opt.Key, opt.TLS),
+		apiClient: newClient(opt.Gateway, opt.Key, opt.TLS),
 		pipeline:  make(chan []byte, 512),
 	}
 }

@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+package gateway
 
 import "github.com/lonng/zetamesh/message"
 
@@ -21,17 +21,13 @@ type Error struct {
 	Err  error
 }
 
-func isSuccess(code message.StatusCode) bool {
-	return code == message.StatusCode_Success
-}
-
 // Error implements the error interface
 func (e *Error) Error() string {
 	return e.Err.Error()
 }
 
 // ErrorWithCode returns a error with the specified error message and code
-func ErrorWithCode(code message.StatusCode, err error) error {
+func withcode(err error, code message.StatusCode) error {
 	return &Error{
 		Code: code,
 		Err:  err,

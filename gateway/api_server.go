@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+package gateway
 
 import (
 	"net"
@@ -33,26 +33,19 @@ type (
 		LastHeartbeat time.Time `json:"-"`
 	}
 
-	// Notifier represents a notifier which is used to synchronize
-	// the peer information to the remote peer when any of the peer
-	// tries to establish a connection between the them.
-	Notifier interface {
-		OpenTunnel(src, dst *PeerInfo)
-	}
-
-	// Server represents the HTTP server which serves for current
+	// server represents the HTTP server which serves for current
 	// gateway.
-	Server struct {
-		notifier Notifier // Notifier is used to notify the peers of current tunnel
-		key      string   // The key of gateway
-		peers    sync.Map // All peers connected to the gateway
+	server struct {
+		notifier *notifier // Notifier is used to notify the peers of current tunnel
+		key      string    // The key of gateway
+		peers    sync.Map  // All peers connected to the gateway
 	}
 )
 
-// NewServer returns a new gateway server instance and the gateway server is
+// newServer returns a new gateway server instance and the gateway server is
 // used to handle the HTTP request and store the peer information.
-func NewServer(notifier Notifier, key string) *Server {
-	return &Server{
+func newServer(notifier *notifier, key string) *server {
+	return &server{
 		notifier: notifier,
 		key:      key,
 	}
@@ -61,15 +54,15 @@ func NewServer(notifier Notifier, key string) *Server {
 // OpenTunnel handles the `OpenTunnelRequest` POST request. It will validate the
 // client information of `Version/Key` and notify the two endpoint if the peer
 // validation successfully.
-func (s *Server) OpenTunnel(req *OpenTunnelRequest) (*OpenTunnelResponse, error) {
+func (s *server) OpenTunnel(req *message.OpenTunnelRequest) (*message.OpenTunnelResponse, error) {
 	ver, err := semver.NewVersion(req.Version)
 	if err != nil {
-		return nil, ErrorWithCode(message.StatusCode_InvalidVersion, errors.WithStack(err))
+		return nil, withcode(err, message.StatusCode_InvalidVersion)
 	}
 
 	if ver.Major < version.MajorVersion {
 		err := errors.Errorf("client version %s doesn't match the server version %s", req.Version, version.NewVersion().String())
-		return nil, ErrorWithCode(message.StatusCode_VersionTooOld, err)
+		return nil, withcode(err, message.StatusCode_VersionTooOld)
 	}
 
 	// TODO: check encryption
@@ -84,12 +77,12 @@ func (s *Server) OpenTunnel(req *OpenTunnelRequest) (*OpenTunnelResponse, error)
 	}
 	s.notifier.OpenTunnel(src, dst)
 
-	return &OpenTunnelResponse{}, nil
+	return &message.OpenTunnelResponse{}, nil
 }
 
 // Heartbeat handles the peer heartbeat packet and update the peer information
 // to the latest to keep it up to date.
-func (s *Server) Heartbeat(remote *net.UDPAddr, heartbeat *message.CtrlHeartbeat) {
+func (s *server) Heartbeat(remote *net.UDPAddr, heartbeat *message.CtrlHeartbeat) {
 	val, found := s.peers.Load(heartbeat.VirtAddress)
 	if found {
 		peer := val.(*PeerInfo)
@@ -113,7 +106,7 @@ func (s *Server) Heartbeat(remote *net.UDPAddr, heartbeat *message.CtrlHeartbeat
 
 // Peer returns the peers and nil will be returned if the peer corresponding
 // to the virtual address is not found.
-func (s *Server) Peer(virtAddr string) *PeerInfo {
+func (s *server) Peer(virtAddr string) *PeerInfo {
 	val, found := s.peers.Load(virtAddr)
 	if !found {
 		return nil

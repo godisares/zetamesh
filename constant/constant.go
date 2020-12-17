@@ -15,6 +15,19 @@ package constant
 
 import "time"
 
+// PluginKeyType represents the unique type of plugin key
+type PluginKeyType string
+
+// Constants used in HTTP API
+const (
+	KeyRawRequest = PluginKeyType("_plugin_key_request")
+)
+
+// API path group
+const (
+	URIOpenTunnel = "/api/v1/tunnel"
+)
+
 // HeartbeatInterval represent the interval of keepping heartbeat with
 // the gateway in seconds
 const HeartbeatInterval = 20

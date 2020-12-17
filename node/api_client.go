@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+package node
 
 import (
 	"bytes"
@@ -20,21 +20,23 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/lonng/zetamesh/constant"
+	"github.com/lonng/zetamesh/message"
 	"github.com/lonng/zetamesh/version"
 	"github.com/pkg/errors"
 )
 
-// Client is used to access with the remote gateway
-type Client struct {
+// client is used to access with the remote gateway
+type client struct {
 	gateway string
 	key     string
 	tls     bool
 }
 
-// NewClient returns a new client instance which can be used to interact
+// newClient returns a new client instance which can be used to interact
 // with the gateway.
-func NewClient(gateway, key string, tls bool) *Client {
-	return &Client{
+func newClient(gateway, key string, tls bool) *client {
+	return &client{
 		gateway: gateway,
 		key:     key,
 		tls:     tls,
@@ -43,14 +45,14 @@ func NewClient(gateway, key string, tls bool) *Client {
 
 // OpenTunnel request the server to open tunnel between the two peers.
 // The source and destionation virtual network address need to be provided.
-func (c *Client) OpenTunnel(src, dst string) error {
-	req := OpenTunnelRequest{
+func (c *client) OpenTunnel(src, dst string) error {
+	req := message.OpenTunnelRequest{
 		Version:     version.NewVersion().String(),
 		Source:      src,
 		Destination: dst,
 	}
-	res := OpenTunnelResponse{}
-	err := c.post(URIOpenTunnel, req, &res)
+	res := message.OpenTunnelResponse{}
+	err := c.post(constant.URIOpenTunnel, req, &res)
 	if err != nil {
 		return errors.WithMessage(err, "open tunnel failed")
 	}
@@ -58,7 +60,7 @@ func (c *Client) OpenTunnel(src, dst string) error {
 	return nil
 }
 
-func (c *Client) do(method, api string, reader io.Reader, res interface{}) error {
+func (c *client) do(method, api string, reader io.Reader, res interface{}) error {
 	var prefix string
 	if c.tls {
 		prefix = fmt.Sprintf("https://%s", c.gateway)
@@ -80,29 +82,31 @@ func (c *Client) do(method, api string, reader io.Reader, res interface{}) error
 		return errors.WithStack(err)
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return errors.New(resp.Status)
+	type response struct {
+		Code  message.StatusCode `json:"code"`
+		Error string             `json:"error"`
+		Data  interface{}        `json:"data"`
 	}
 
-	result := &Result{Data: res}
+	result := &response{Data: res}
 	err = json.NewDecoder(resp.Body).Decode(result)
 	if err != nil {
 		return errors.WithMessagef(err, "invalid json response when request %s", api)
 	}
 
-	if !isSuccess(result.Code) {
-		return ErrorWithCode(result.Code, errors.New(result.Error))
+	if result.Code != message.StatusCode_Success {
+		return fmt.Errorf("%d: %s", result.Code, result.Error)
 	}
 
 	return nil
 }
 
 //nolint:unused
-func (c *Client) get(api string, res interface{}) error {
+func (c *client) get(api string, res interface{}) error {
 	return c.do(http.MethodGet, api, nil, res)
 }
 
-func (c *Client) post(api string, req, res interface{}) error {
+func (c *client) post(api string, req, res interface{}) error {
 	buffer := &bytes.Buffer{}
 	err := json.NewEncoder(buffer).Encode(req)
 	if err != nil {

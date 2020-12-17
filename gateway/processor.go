@@ -16,7 +16,6 @@ package gateway
 import (
 	"net"
 
-	"github.com/lonng/zetamesh/api"
 	"github.com/lonng/zetamesh/codec"
 	"github.com/lonng/zetamesh/message"
 	"github.com/pkg/errors"
@@ -30,11 +29,11 @@ var protos = [...]proto.Message{
 }
 
 type processor struct {
-	server   *api.Server
+	server   *server
 	notifier *notifier
 }
 
-func newProcessor(server *api.Server, notifier *notifier) *processor {
+func newProcessor(server *server, notifier *notifier) *processor {
 	return &processor{
 		server:   server,
 		notifier: notifier,

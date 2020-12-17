@@ -18,7 +18,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lonng/zetamesh/api"
 	"github.com/lonng/zetamesh/codec"
 	"github.com/lonng/zetamesh/constant"
 	"github.com/lonng/zetamesh/message"
@@ -126,9 +125,9 @@ func (n *notifier) start(conn *net.UDPConn, concurrency int) {
 	}
 }
 
-func (n *notifier) OpenTunnel(src, dst *api.PeerInfo) {
+func (n *notifier) OpenTunnel(src, dst *PeerInfo) {
 	n.mu.Lock()
-	peers := []*api.PeerInfo{src, dst}
+	peers := []*PeerInfo{src, dst}
 	for i, p := range peers {
 		ackID := n.ackID.Add(1)
 		n.data[ackID] = retryPacket{

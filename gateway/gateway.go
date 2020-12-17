@@ -20,7 +20,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/lonng/zetamesh/api"
 	"github.com/lonng/zetamesh/constant"
 	"github.com/lonng/zetamesh/message"
 	"github.com/pingcap/fn"
@@ -43,12 +42,23 @@ type Options struct {
 // 3. set the response encoder
 func setupMiddleware() {
 	fn.Plugin(func(ctx context.Context, request *http.Request) (context.Context, error) {
-		return context.WithValue(ctx, api.KeyRawRequest, request), nil
+		return context.WithValue(ctx, constant.KeyRawRequest, request), nil
 	})
+
+	type (
+		Success struct {
+			Data interface{} `json:"data"`
+		}
+
+		Failure struct {
+			Code  message.StatusCode `json:"code"`
+			Error string             `json:"error"`
+		}
+	)
 
 	// Define a error encoder to unify all error response
 	fn.SetErrorEncoder(func(ctx context.Context, err error) interface{} {
-		request := ctx.Value(api.KeyRawRequest).(*http.Request)
+		request := ctx.Value(constant.KeyRawRequest).(*http.Request)
 		zap.L().Error("Handle HTTP API request failed",
 			zap.String("api", request.RequestURI),
 			zap.String("method", request.Method),
@@ -56,10 +66,10 @@ func setupMiddleware() {
 			zap.Error(err))
 
 		code := message.StatusCode_ServerInternal
-		if e, ok := err.(*api.Error); ok {
+		if e, ok := err.(*Error); ok {
 			code = e.Code
 		}
-		return &api.Result{
+		return &Failure{
 			Code:  code,
 			Error: err.Error(),
 		}
@@ -67,13 +77,13 @@ func setupMiddleware() {
 
 	// Define a body response to unify all success response
 	fn.SetResponseEncoder(func(ctx context.Context, payload interface{}) interface{} {
-		request := ctx.Value(api.KeyRawRequest).(*http.Request)
+		request := ctx.Value(constant.KeyRawRequest).(*http.Request)
 		zap.L().Debug("Handle HTTP API request success",
 			zap.String("api", request.RequestURI),
 			zap.String("method", request.Method),
 			zap.String("remote", request.RemoteAddr),
 			zap.Reflect("data", payload))
-		return &api.Result{
+		return &Success{
 			Data: payload,
 		}
 	})
@@ -93,7 +103,7 @@ func Serve(opt Options) error {
 
 	var (
 		notifier  = newNotifier()
-		server    = api.NewServer(notifier, opt.Key)
+		server    = newServer(notifier, opt.Key)
 		processor = newProcessor(server, notifier)
 		buffer    = make([]byte, constant.MaxBufferSize)
 	)
@@ -103,7 +113,7 @@ func Serve(opt Options) error {
 
 	// Initialize the HTTP service and register all APIs
 	router := mux.NewRouter()
-	router.Handle(api.URIOpenTunnel, fn.Wrap(server.OpenTunnel)).Methods(http.MethodPost)
+	router.Handle(constant.URIOpenTunnel, fn.Wrap(server.OpenTunnel)).Methods(http.MethodPost)
 
 	go func() {
 		var err error

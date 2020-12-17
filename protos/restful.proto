@@ -11,17 +11,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package api
+syntax = "proto3";
+option go_package = "/message";
 
-// PluginKeyType represents the unique type of plugin key
-type PluginKeyType string
+// OpenTunnelRequest represents the request when trying to open
+// a tunnel
+message OpenTunnelRequest {
+    string version = 1;
+    string algorithm = 2;
+    string Nonce = 3;
+    string cipher = 4;
+    string source = 5;
+    string destination = 6;
+}
 
-// Constants used in HTTP API
-const (
-	KeyRawRequest = PluginKeyType("_plugin_key_request")
-)
-
-// API path group
-const (
-	URIOpenTunnel = "/api/v1/tunnel"
-)
+// OpenTunnelResponse represent the response of trying to open
+// a tunnel
+message OpenTunnelResponse {
+    string encrypt = 1;
+}
