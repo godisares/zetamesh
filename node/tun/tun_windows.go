@@ -27,7 +27,7 @@ import (
 	_ "unsafe"
 
 	"github.com/pkg/errors"
-	"github.com/zetamesh/zetamesh/node/tun/wintun"
+	"github.com/zetamesh/wintun-go"
 	"go.uber.org/zap"
 	"golang.org/x/sys/windows"
 )
@@ -67,6 +67,8 @@ func init() {
 	if err != nil {
 		panic(fmt.Errorf("failed to make pool: %w", err))
 	}
+
+	wintun.DisableLog = true
 }
 
 //go:linkname procyield runtime.procyield

@@ -61,7 +61,7 @@ func (n *Node) handlePacket(remote net.Addr, data []byte) {
 	packetType := message.PacketType(data[0])
 	payload := data[1:]
 	if packetType == message.PacketType_Data {
-		zap.L().Debug("Receive packet", zap.Stringer("source", remote))
+		zap.L().Debug("Receive packet", zap.Stringer("source", remote), zap.Int("length", len(payload)))
 		dataCopy := make([]byte, len(payload))
 		copy(dataCopy, payload)
 		n.pipeline <- dataCopy

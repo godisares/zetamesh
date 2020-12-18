@@ -12,6 +12,7 @@ require (
 	github.com/pingcap/fn v0.0.0-20200306044125-d5540d389059
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.0.0
+	github.com/zetamesh/wintun-go v0.0.0-20201218160243-df5a4793ff14
 	go.uber.org/atomic v1.6.0
 	go.uber.org/zap v1.14.1
 	golang.org/x/sys v0.0.0-20201126233918-771906719818
