@@ -46,15 +46,24 @@ This section will give you some instructions to make you quick start with Zetame
 
 ## Features
 
-- [x] Support P2P
-- [x] Support relay via Gateway
+- [x] Support P2P communication
+- [x] Support relay via Gateway when symmetric NAT
 - [ ] Support more operation systems
     - [x] Support MacOS
     - [x] Support Linux
     - [x] Support Windows
     - [ ] Support iOS
     - [ ] Support Android
+- [ ] Support GUI application
+- [ ] Dashboard for gateway
 - [ ] Support traffic encryption
+
+## Build
+
+### Prerequisites
+
+- Golang 1.15 or newer
+- Protoc & Protoc-gen-go
 
 ## Contribution
 
