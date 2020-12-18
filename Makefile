@@ -12,7 +12,7 @@ COMMIT    := $(shell git describe --no-match --always --dirty)
 BRANCH    := $(shell git rev-parse --abbrev-ref HEAD)
 BUILDTIME := $(shell date '+%Y-%m-%d %T %z')
 
-REPO := github.com/lonng/zetamesh
+REPO := github.com/zetamesh/zetamesh
 LDFLAGS := -w -s
 LDFLAGS += -X "$(REPO)/version.GitHash=$(COMMIT)"
 LDFLAGS += -X "$(REPO)/version.GitBranch=$(BRANCH)"

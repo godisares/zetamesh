@@ -19,9 +19,9 @@ import (
 	"time"
 
 	"github.com/coreos/go-semver/semver"
-	"github.com/lonng/zetamesh/message"
-	"github.com/lonng/zetamesh/version"
 	"github.com/pkg/errors"
+	"github.com/zetamesh/zetamesh/message"
+	"github.com/zetamesh/zetamesh/version"
 	"go.uber.org/zap"
 )
 

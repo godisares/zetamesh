@@ -16,9 +16,9 @@ package gateway
 import (
 	"net"
 
-	"github.com/lonng/zetamesh/codec"
-	"github.com/lonng/zetamesh/message"
 	"github.com/pkg/errors"
+	"github.com/zetamesh/zetamesh/codec"
+	"github.com/zetamesh/zetamesh/message"
 	"google.golang.org/protobuf/proto"
 )
 

@@ -20,10 +20,10 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/lonng/zetamesh/constant"
-	"github.com/lonng/zetamesh/message"
-	"github.com/lonng/zetamesh/version"
 	"github.com/pkg/errors"
+	"github.com/zetamesh/zetamesh/constant"
+	"github.com/zetamesh/zetamesh/message"
+	"github.com/zetamesh/zetamesh/version"
 )
 
 // client is used to access with the remote gateway

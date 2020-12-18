@@ -18,9 +18,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/lonng/zetamesh/codec"
-	"github.com/lonng/zetamesh/constant"
-	"github.com/lonng/zetamesh/message"
+	"github.com/zetamesh/zetamesh/codec"
+	"github.com/zetamesh/zetamesh/constant"
+	"github.com/zetamesh/zetamesh/message"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/proto"
 )

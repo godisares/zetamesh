@@ -14,7 +14,7 @@
 package codec
 
 import (
-	"github.com/lonng/zetamesh/message"
+	"github.com/zetamesh/zetamesh/message"
 	"google.golang.org/protobuf/proto"
 )
 

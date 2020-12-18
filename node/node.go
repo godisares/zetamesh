@@ -22,11 +22,11 @@ import (
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/libp2p/go-reuseport"
-	"github.com/lonng/zetamesh/codec"
-	"github.com/lonng/zetamesh/constant"
-	"github.com/lonng/zetamesh/message"
-	"github.com/lonng/zetamesh/node/tun"
 	"github.com/pkg/errors"
+	"github.com/zetamesh/zetamesh/codec"
+	"github.com/zetamesh/zetamesh/constant"
+	"github.com/zetamesh/zetamesh/message"
+	"github.com/zetamesh/zetamesh/node/tun"
 	"go.uber.org/zap"
 )
 

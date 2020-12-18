@@ -26,8 +26,8 @@ import (
 	"time"
 	_ "unsafe"
 
-	"github.com/lonng/zetamesh/node/tun/wintun"
 	"github.com/pkg/errors"
+	"github.com/zetamesh/zetamesh/node/tun/wintun"
 	"go.uber.org/zap"
 	"golang.org/x/sys/windows"
 )

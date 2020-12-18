@@ -13,7 +13,7 @@
 
 package gateway
 
-import "github.com/lonng/zetamesh/message"
+import "github.com/zetamesh/zetamesh/message"
 
 // Error represent a dedicated error type, which contain the API status code
 type Error struct {

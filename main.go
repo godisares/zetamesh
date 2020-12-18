@@ -23,10 +23,10 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"github.com/lonng/zetamesh/gateway"
-	"github.com/lonng/zetamesh/node"
-	"github.com/lonng/zetamesh/version"
 	"github.com/spf13/cobra"
+	"github.com/zetamesh/zetamesh/gateway"
+	"github.com/zetamesh/zetamesh/node"
+	"github.com/zetamesh/zetamesh/version"
 )
 
 func main() {

@@ -13,8 +13,8 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/lonng/zetamesh/node/tun/wintun/memmod"
-	"github.com/lonng/zetamesh/node/tun/wintun/resource"
+	"github.com/zetamesh/zetamesh/node/tun/wintun/memmod"
+	"github.com/zetamesh/zetamesh/node/tun/wintun/resource"
 	"golang.org/x/sys/windows"
 )
 

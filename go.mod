@@ -1,4 +1,4 @@
-module github.com/lonng/zetamesh
+module github.com/zetamesh/zetamesh
 
 go 1.14
 

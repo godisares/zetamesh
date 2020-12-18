@@ -20,9 +20,9 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/lonng/zetamesh/constant"
-	"github.com/lonng/zetamesh/message"
 	"github.com/pingcap/fn"
+	"github.com/zetamesh/zetamesh/constant"
+	"github.com/zetamesh/zetamesh/message"
 	"go.uber.org/zap"
 )
 
